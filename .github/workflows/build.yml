@@ -1,0 +1,27 @@
+name: Build and deploy
+
+# Trigger deployment only on push to main branch
+on:
+  push:
+    branches:
+      - main 
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Deploy to server
+        uses: bitovi/github-actions-deploy-docker-to-ec2@v0.1.0
+        with:
+          checkout: false
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_resource_identifier: ${{ secrets.EC2_RESOURCE_ID }}
+          app_port: 5000
